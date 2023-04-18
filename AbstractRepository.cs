@@ -100,11 +100,7 @@ namespace ClaLuLaNa
             try
             {
                 var result = _context.Set<TEntity>().Add(entity);
-                if (result is null)
-                    return null;
-
                 await SaveChangesAsyncAndNotify(cancellationToken);
-
                 return result.Entity;
             }
             catch (Exception ex)
@@ -129,11 +125,7 @@ namespace ClaLuLaNa
                 try
                 {
                     EntityEntry<TEntity> result = _context.Set<TEntity>().Update(entity);
-                    if (result is null)
-                        return null;
-
                     await SaveChangesAsyncAndNotify(cancellationToken);
-
                     return result.Entity;
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -181,11 +173,7 @@ namespace ClaLuLaNa
             try
             {
                 var deleted = _context.Set<TEntity>().Remove(entity);
-                if (deleted is null)
-                    return null;
-
                 await SaveChangesAsyncAndNotify(cancellationToken);
-
                 return deleted.Entity;
             }
             catch (Exception ex)
@@ -202,6 +190,9 @@ namespace ClaLuLaNa
             if (local is not null)
                 _context.Entry(local).State = EntityState.Detached;
         }
+
+        public IQueryable<TEntity> GetQueryable()
+            => _context.Set<TEntity>();
 
         public int ExecuteSqlRaw(string sql, params object[] parameters)
         {
